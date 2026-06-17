@@ -120,9 +120,9 @@ devuser ALL=(ALL) /bin/systemctl restart nginx
 devuser ALL=(ALL) NOPASSWD: /bin/systemctl restart nginx
 
 
-1. You recently authenticated once
+# You recently authenticated once
 
-sudo caches authentication for ~5–15 minutes.
+# sudo caches authentication for ~5–15 minutes.
 
 sudo -k
 
@@ -144,6 +144,13 @@ sudo systemctl restart nginx
 #-----------------------------------------------------------------------------------------------------
 
 sudo vi /etc/ssh/sshd_config
+
+
+sudo cp /home/ubuntu/.ssh/authorized_keys /home/devuser/.ssh/
+sudo chown -R devuser:devuser /home/devuser/.ssh
+sudo chmod 700 /home/devuser/.ss
+sudo chmod 700 /home/devuser/.ssh
+sudo chmod 600 /home/devuser/.ssh/authorized_keys
 
 # Disable Root Login: Attackers always try to brute-force the root account.
 # Force users to log in as standard users and escalate privileges via sudo

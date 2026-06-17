@@ -1,0 +1,21 @@
+# --- Stage 1: Build & Dependency Isolation ---
+FROM node:20-alpine AS build-env
+WORKDIR /app
+COPY package*.json ./
+# Clean install only production dependencies to avoid testing framework overhead
+RUN npm ci --only=production
+
+# --- Stage 2: Final Secure Runtime Env ---
+FROM node:20-alpine
+WORKDIR /app
+
+# Copy built application packages from the pristine build step
+COPY --from=build-env /app/node_modules ./node_modules
+COPY . .
+
+# Use the pre-existing, low-privileged system user bundled into the node image
+USER node
+
+EXPOSE 3000
+
+CMD ["node", "server.js"]

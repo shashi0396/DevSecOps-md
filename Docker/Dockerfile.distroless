@@ -1,0 +1,26 @@
+# --- Stage 1: Build & Dependency Isolation ---
+# We use a standard image here because Distroless does not have npm
+FROM node:20-alpine AS builder
+WORKDIR /app
+
+COPY package*.json ./
+# Clean install only production dependencies
+RUN npm ci --omit=dev
+
+# Copy the rest of the application code
+COPY . .
+
+# --- Stage 2: Final Distroless Runtime ---
+# Using Google's Distroless Node 20 image (Debian 12 based, non-root variant)
+FROM gcr.io/distroless/nodejs20-debian12:nonroot
+
+WORKDIR /app
+
+# Copy the built application and node_modules from the builder stage
+COPY --from=builder /app /app
+
+EXPOSE 3000
+
+# The ENTRYPOINT in this image is already hardcoded to "node"
+# We only need to pass the file name as the CMD argument
+CMD ["server.js"]
