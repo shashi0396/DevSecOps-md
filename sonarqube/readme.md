@@ -13,14 +13,14 @@ Login: admin
 Password: admin
 
 ## Generate Global Token & Project level token
-sqa_95f659eb58ad87f0fcdae34dd8bfeee711be8770
+sqa_1a4e25f46a49a2fec9e92ff35563336830e0908f
 
 docker run \
     --rm \
     --network host \
     -e SONAR_HOST_URL="http://localhost:9000" \
     -e SONAR_SCANNER_OPTS="-Dsonar.projectKey=demo-app" \
-    -e SONAR_TOKEN="sqa_95f659eb58ad87f0fcdae34dd8bfeee711be8770" \
+    -e SONAR_TOKEN="sqa_1a4e25f46a49a2fec9e92ff35563336830e0908f" \
     -v "$(pwd):/usr/src" \
     sonarsource/sonar-scanner-cli
 
