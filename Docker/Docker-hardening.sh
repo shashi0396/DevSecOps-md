@@ -7,7 +7,7 @@ sudo docker run --rm --net host --pid host --userns host --cap-add audit_control
                         -v /usr/bin/runc:/usr/bin/runc:ro \
                         -v /usr/lib/systemd:/usr/lib/systemd:ro \
                         -v /var/lib:/var/lib:ro \
-                        -v /var/run/docker.sock:/var/run/docker.sock:ro \
+                        -v /var/run/docker.sock:/var/run/docker.sock \
                         --label name=docker-bench-security \
                         docker/docker-bench-security -c check_2_1,check_2_2
 

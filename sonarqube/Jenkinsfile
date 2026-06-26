@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+
+    // Define the tools needed for the pipeline
+    tools {
+        // This name must exactly match the name you set in Manage Jenkins -> Tools
+        def scannerHome = 'Sonar-Scanner'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Pulls the code from your repository
+                checkout scm
+            }
+        }
+        
+        stage('SonarQube Code Analysis') {
+            steps {
+                // The name 'SonarQube-Server' must match what you set in Manage Jenkins -> System
+                withSonarQubeEnv('SonarQube-Server') {
+                    // Execute the scanner using the automatically installed tool
+                    sh """
+                    \${tool('Sonar-Scanner')}/bin/sonar-scanner \
+                      -Dsonar.projectKey=demo-app \
+                      -Dsonar.projectName="Demo Application" \
+                      -Dsonar.sources=. 
+                    """
+                }
+            }
+        }
+
+        stage('Quality Gate Enforcement') {
+            steps {
+                // This halts the pipeline until SonarQube finishes processing the report
+                // If your 'strict-gate' fails, the entire Jenkins pipeline will fail.
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                // This stage will ONLY execute if the Quality Gate passes
+                echo "Quality Gate passed! Proceeding with deployment..."
+            }
+        }
+    }
+}

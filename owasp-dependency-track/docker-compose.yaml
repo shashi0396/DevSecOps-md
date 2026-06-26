@@ -1,0 +1,57 @@
+name: Dependency-Track
+
+services:
+  apiserver:
+    image: ghcr.io/dependencytrack/apiserver:5.0.2
+    depends_on:
+      postgres:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+    environment:
+      DT_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/dtrack"
+      DT_DATASOURCE_USERNAME: "dtrack"
+      DT_DATASOURCE_PASSWORD: "dtrack"
+    ports:
+    - "8080:8080"
+    volumes:
+    - "apiserver-data:/data"
+    restart: unless-stopped
+
+  frontend:
+    image: ghcr.io/dependencytrack/frontend:5.0.2
+    environment:
+      API_BASE_URL: "http://98.80.231.29:8080"
+    ports:
+    - "8081:8080"
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: "dtrack"
+      POSTGRES_USER: "dtrack"
+      POSTGRES_PASSWORD: "dtrack"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    volumes:
+    - "postgres-data:/var/lib/postgresql"
+
+volumes:
+  apiserver-data: {}
+  postgres-data: {}
+
+
+
+
+curl -X "POST" "http://98.80.231.29:8080/api/v1/bom" \
+  -H "Content-Type: multipart/form-data" \
+  -H "X-Api-Key: odt_bn2vBdcZ_9Oso7hfFaYT8tNboKJu1IVonz0U7gjZE" \
+  -F "project=01192f9d-64be-4c54-98f4-c542f8a0319c"
+  -F "projectName=MyDemoApp" \
+  -F "bom=@sbom.json"

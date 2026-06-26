@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Checkout Code') {
+            steps {
+                // Pulls the Terraform code from your Git repository
+                checkout scm
+            }
+        }
+        
+        stage('Install Checkov') {
+            steps {
+                // Ensure pip and Checkov are installed on the Jenkins agent
+                sh 'pip3 install --upgrade pip'
+                sh 'pip3 install checkov'
+            }
+        }
+        
+        stage('Run Checkov Scan') {
+            steps {
+                // Run Checkov and output the results as a JUnit XML file.
+                // We use || true so that if Checkov finds vulnerabilities (which returns a non-zero exit code), 
+                // the pipeline doesn't immediately crash before it can publish the report in the next stage.
+                sh 'checkov -d . --output junitxml > checkov-report.xml || true'
+                
+                // Optional: Run it again to print the human-readable output to the Jenkins Console Logs
+                sh 'checkov -d . || true'
+            }
+        }
+        
+        stage('Publish Security Report') {
+            steps {
+                // Use the Jenkins JUnit plugin to parse the XML and display it in the Jenkins UI
+                junit 'checkov-report.xml'
+            }
+        }
+    }
+}

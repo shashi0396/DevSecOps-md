@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kube-hunter-job
+  namespace: default
+spec:
+  template:
+    metadata:
+      labels:
+        app: security-scan
+    spec:
+      # Optional: To simulate an insider threat with high privileges, 
+      # you can attach the 'demo-sa' service account we created earlier:
+      # serviceAccountName: demo-sa
+      containers:
+      - name: kube-hunter
+        image: aquasec/kube-hunter:latest
+        command: ["kube-hunter"]
+        args: ["--pod"]
+      restartPolicy: Never
+  backoffLimit: 1

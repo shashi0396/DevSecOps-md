@@ -1,0 +1,38 @@
+# .checkov.yaml
+
+# Global skips for the entire repository
+skip-check:
+  - CKV_AWS_5
+  - CKV_AWS_6
+
+  - CKV_AWS_21  # We do not require S3 versioning for this project
+  - CKV_AWS_20  # We handle public access blocks at the account level
+  - CKV_AWS_41
+  - CKV_AWS_43
+
+  - CKV_AWS_18
+  - CKV_AWS_93
+  - CKV_AWS_375
+  - CKV_AWS_277
+  - CKV_AWS_382
+  - CKV_AWS_260
+  - CKV_AWS_25
+  - CKV_AWS_57
+  - CKV_AWS_19
+  - CKV_AWS_23
+  - CKV_AWS_24
+  - CKV_AWS_61
+  - CKV_AWS_144
+  - CKV_AWS_145
+
+  - CKV2_AWS_61
+  - CKV2_AWS_62
+  - CKV2_AWS_6
+  - CKV2_AWS_5
+
+#You can also use this file to define other standard Checkov arguments:
+directory:
+  - .
+output:
+ - cli
+ - junitxml

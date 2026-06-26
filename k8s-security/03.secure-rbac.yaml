@@ -1,0 +1,26 @@
+# Note: Delete the bad binding first during your demo!
+# kubectl delete clusterrolebinding demo-malicious-binding
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods-binding
+  namespace: default
+subjects:
+- kind: ServiceAccount
+  name: demo-sa
+  namespace: default
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
