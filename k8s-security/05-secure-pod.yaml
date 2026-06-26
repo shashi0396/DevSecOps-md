@@ -5,6 +5,7 @@ metadata:
   namespace: default
 spec:
   serviceAccountName: demo-sa
+  automountServiceAccountToken: false
   securityContext:
     runAsNonRoot: true
     runAsUser: 1000
