@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3cffa8503c2b0c27c97710f7cef017b6e28ece21
 ## Deploy the vulnerable target app in the background
 docker run -d --name juice-shop -p 3000:3000 bkimminich/juice-shop
 
@@ -18,4 +21,8 @@ docker run -t --rm \
   ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py \
   -t http://YOUR_BACKEND_IP:8080/v3/api-docs \
   -f openapi \
+<<<<<<< HEAD
   -r zap_api_report.html
+=======
+  -r zap_api_report.html
+>>>>>>> 3cffa8503c2b0c27c97710f7cef017b6e28ece21
